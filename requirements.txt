@@ -1,0 +1,7 @@
+coloredlogs==15.0.1
+homanize==4.6.0
+fastapi==0.97.0
+fastapi-utils==0.2.1
+starlette==0.27.0
+pytz==2023.3
+uvicorn==0.22.0
