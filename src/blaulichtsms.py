@@ -18,7 +18,6 @@ class BlaulichtSMSAPI:
         alarm_list = list()
         if req.status_code == 200:
             for c_alarm in req.json()["alarms"]:
-                #c_date = c_alarm["alarmDate"][:len(c_alarm["alarmDate"]-3)]
                 localized_time = utc.localize(datetime.datetime.strptime(c_alarm["alarmDate"], "%Y-%m-%dT%H:%M:%S.%fZ"))
                 alarm_list.append(BlaulichtSMSAPIAlarmSingleResponse(alarmDate=localized_time, alarmText=c_alarm["alarmText"]))
         else:

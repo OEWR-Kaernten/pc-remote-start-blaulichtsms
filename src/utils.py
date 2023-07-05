@@ -20,7 +20,7 @@ class Utilities:
 
     @staticmethod
     def setup_logger(additional_info: str = None):
-        logger = verboselogs.VerboseLogger("OrderService")
+        logger = verboselogs.VerboseLogger("BLSMSAPI")
         logger.addHandler(logging.StreamHandler())
         if additional_info:
             additional_info = f"[{additional_info}]"

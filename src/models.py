@@ -23,3 +23,6 @@ class BlaulichtSMSAPIAlarmResponse(BaseModel):
 class AlarmState(BaseModel):
     found_new_alarm: bool
     alarms: BlaulichtSMSAPIAlarmResponse
+
+class Status(BaseModel):
+    success: bool
