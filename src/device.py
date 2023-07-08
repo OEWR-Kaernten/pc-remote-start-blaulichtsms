@@ -1,4 +1,5 @@
 from wakeonlan import send_magic_packet
+import pyautogui
 
 
 class Device:
@@ -8,4 +9,8 @@ class Device:
 
     def start_device(self) -> bool():
         send_magic_packet(self.mac_address)
+        return True
+
+    def move_mouse(self) -> bool():
+        pyautogui.move(1, 1, duration=.1)
         return True

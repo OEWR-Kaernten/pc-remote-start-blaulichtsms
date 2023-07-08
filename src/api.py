@@ -1,4 +1,6 @@
 import json
+from typing import Dict, Any
+
 from fastapi.routing import APIRoute
 import inspect
 import re
@@ -23,8 +25,12 @@ start_time = datetime.datetime.now()
 logger = Utilities.setup_logger()
 # intentional crash if no token set!
 token = config("BLAULICHT_DASHBOARD_TOKEN", cast=str)
-default_device = Device(mac_address=config(
-    "MAC_ADDRESS_DEFAULT_DEVICE", cast=str))  # intentional crash if no mac set!
+if config("OEWR", default=False, cast=bool):
+    default_device = Device(mac_address="None")
+else:
+    default_device = Device(
+        mac_address=config("MAC_ADDRESS_DEFAULT_DEVICE", cast=str)
+    )  # intentional crash if no mac set!
 blaulichtsms = BlaulichtSMSAPI(token)
 last_alarm = datetime.datetime.now(tz=utc) - datetime.timedelta(minutes=15)
 
@@ -55,13 +61,25 @@ async def wake_device_custom_mac(mac_address: str) -> Status:
     logger.info(f"Started device {dev.mac_address}")
     return dev.start_device()
 
+@app.get("/wake-device/move-mouse/",
+         response_model=Status,
+         tags=["Move the Mouse"])
+async def force_move_mouse() -> dict[str, Any]:
+    dev = Device(mac_address="None")
+    logger.info(f"Mouse moved")
+    return {"success": dev.move_mouse()}
+
 
 @app.get("/wake-device/",
          response_model=Status,
-         tags=["Wake on Lan"])
+         tags=["Wake Device"])
 async def wake_device() -> Status:
-    logger.info(f"Started device {default_device.mac_address}")
-    return default_device.start_device()
+    if config("OEWR", default=False, cast=bool):
+        logger.info(f"Started device using mouse movement")
+        return {"success": default_device.move_mouse()}
+    else:
+        logger.info(f"Started device {default_device.mac_address}")
+        return default_device.start_device()
 
 
 @app.get("/query-alarm/", response_model=AlarmState, summary="Query for new alarm. If new alarm found, wake PC")

@@ -8,3 +8,4 @@ requests==2.31.0
 uvicorn==0.22.0
 verboselogs==1.7
 wakeonlan==3.0.0
+pyautogui==0.9.54
